@@ -27,7 +27,7 @@
 	<properties>
         <muleEmbeddedApiVersion>1.0.0-rc.darkseid-SNAPSHOT</muleEmbeddedApiVersion>
 
-        <muleSchedulerServiceVersion>1.0.0-rc.darkseid-SNAPSHOT</muleSchedulerServiceVersion>
+        <muleSchedulerServiceVersion>1.0.0-rc.darkseid-TEST-RELEASE</muleSchedulerServiceVersion>
         <muleHttpServiceVersion>1.0.0-rc.darkseid-TEST-RELEASE</muleHttpServiceVersion>
         <muleOAuthServiceVersion>1.0.0-rc.darkseid-TEST-RELEASE</muleOAuthServiceVersion>
         <muleSoapServiceVersion>1.0.0-rc.darkseid-SNAPSHOT</muleSoapServiceVersion>
