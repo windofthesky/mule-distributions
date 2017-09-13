@@ -30,7 +30,7 @@
         <muleSchedulerServiceVersion>1.0.0-rc-DRY-RUN</muleSchedulerServiceVersion>
         <muleHttpServiceVersion>1.0.0-rc-DRY-RUN</muleHttpServiceVersion>
         <muleOAuthServiceVersion>1.0.0-rc-DRY-RUN</muleOAuthServiceVersion>
-        <muleSoapServiceVersion>1.0.0-rc-SNAPSHOT</muleSoapServiceVersion>
+        <muleSoapServiceVersion>1.0.0-rc-DRY-RUN</muleSoapServiceVersion>
 
         <formatterConfigPath>formatter.xml</formatterConfigPath>
 	</properties>
