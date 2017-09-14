@@ -20,6 +20,7 @@ import static org.mule.runtime.core.api.config.MuleProperties.MULE_HOME_DIRECTOR
 import static org.mule.runtime.module.deployment.impl.internal.application.DeployableMavenClassLoaderModelLoader.ADD_TEST_DEPENDENCIES_KEY;
 import static org.mule.runtime.module.embedded.impl.SerializationUtils.deserialize;
 import org.mule.runtime.api.exception.MuleException;
+import org.mule.runtime.deployment.model.api.application.Application;
 import org.mule.runtime.module.artifact.api.classloader.ArtifactClassLoader;
 import org.mule.runtime.module.embedded.api.ArtifactConfiguration;
 import org.mule.runtime.module.embedded.api.ContainerInfo;
@@ -46,6 +47,7 @@ public class EmbeddedController {
   private ContainerInfo containerInfo;
   private ArtifactClassLoader containerClassLoader;
   private MuleContainer muleContainer;
+  private Map<String, Application> deployedApplications = new HashMap<>(128);
 
   public EmbeddedController(byte[] serializedContainerInfo)
       throws IOException, ClassNotFoundException {
@@ -61,25 +63,32 @@ public class EmbeddedController {
 
   public synchronized void deployApplication(byte[] serializedArtifactConfiguration) throws IOException, ClassNotFoundException {
     ArtifactConfiguration artifactConfiguration = deserialize(serializedArtifactConfiguration);
+    //TODO check if application is already deployed
     try {
       if (artifactConfiguration.getDeploymentConfiguration().enableTestDependencies()) {
         setProperty(ADD_TEST_DEPENDENCIES_KEY, "true");
       }
-      muleContainer.getDeploymentService().getLock().lock();
-      muleContainer.getDeploymentService().deploy(artifactConfiguration.getArtifactLocation().toURI());
+      //muleContainer.getDeploymentService().getLock().lock();
+      //muleContainer.getDeploymentService().deploy(artifactConfiguration.getArtifactLocation().toURI());
+      deployedApplications.put(artifactConfiguration.getArtifactLocation().getName(),
+                               muleContainer.getToolingService().createApplication(artifactConfiguration.getArtifactLocation()));
     } catch (IOException e) {
       throw new RuntimeException(e);
     } finally {
-      if (muleContainer.getDeploymentService().getLock().isHeldByCurrentThread()) {
-        muleContainer.getDeploymentService().getLock().unlock();
-      }
+      //if (muleContainer.getDeploymentService().getLock().isHeldByCurrentThread()) {
+      //  muleContainer.getDeploymentService().getLock().unlock();
+      //}
       setProperty(ADD_TEST_DEPENDENCIES_KEY, "false");
     }
   }
 
   public void undeployApplication(byte[] serializedApplicationName) throws IOException, ClassNotFoundException {
     String applicationName = deserialize(serializedApplicationName);
-    muleContainer.getDeploymentService().undeploy(applicationName);
+    //muleContainer.getDeploymentService().undeploy(applicationName);
+    //TODO check if application is already deployed
+    if (deployedApplications.containsKey(applicationName)) {
+      deployedApplications.get(applicationName).dispose();
+    }
   }
 
   // TODO MULE-10392: To be removed once we have methods to deploy with properties
